@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pathfinder Console — Route-finding Algorithms</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <div class="brand-mark"></div>
+          <div>
+            <div class="eyebrow">Route Engine // Live Simulation</div>
+            <h1>Pathfinder Console</h1>
+          </div>
+        </div>
+        <div class="subtitle">
+          Four algorithms, one network — draw stations, lay track, and watch
+          each one find its route.
+        </div>
+      </header>
+
+      <div class="layout">
+        <!-- ===== SIDEBAR ===== -->
+        <div class="sidebar">
+          <div class="panel">
+            <div class="panel-title">Select Algorithm</div>
+            <div class="line-list" id="lineList"></div>
+            <div class="info-card" id="infoCard"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">Map Tools</div>
+            <div class="seg" id="modeSeg">
+              <button data-mode="wall" class="active">
+                <span class="sw" style="background: var(--wall)"></span>Wall
+              </button>
+              <button data-mode="traffic">
+                <span
+                  class="sw"
+                  style="
+                    background: repeating-linear-gradient(
+                      45deg,
+                      #7a5a22,
+                      #7a5a22 2px,
+                      #3a2c12 2px,
+                      #3a2c12 4px
+                    );
+                  "
+                ></span
+                >Traffic
+              </button>
+              <button data-mode="start">
+                <span class="sw" style="background: var(--start)"></span>Start
+              </button>
+              <button data-mode="end">
+                <span class="sw" style="background: var(--end)"></span>End
+              </button>
+              <button data-mode="erase">
+                <span
+                  class="sw"
+                  style="background: #1a2236; border: 1px dashed #3a445c"
+                ></span
+                >Erase
+              </button>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn" id="btnRandom">🎲 Random Network</button>
+              <button class="btn btn-ghost" id="btnClearBoard">
+                Clear Board
+              </button>
+              <button class="btn btn-ghost" id="btnClearPath">
+                Clear Path
+              </button>
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>Animation Speed</span><span id="speedVal">Fast</span>
+              </div>
+              <input type="range" id="speed" min="1" max="30" value="22" />
+            </div>
+
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btnRun">
+                ▶ Run Simulation
+              </button>
+              <button class="btn btn-ghost" id="btnCompare">
+                ⇄ Compare All Lines
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== STAGE ===== -->
+        <div class="stage">
+          <div class="canvas-wrap"><canvas id="grid"></canvas></div>
+
+          <div class="legend">
+            <span><i style="background: var(--start)"></i>Start</span>
+            <span><i style="background: var(--end)"></i>Destination</span>
+            <span><i style="background: var(--wall)"></i>Wall (blocked)</span>
+            <span
+              ><i
+                style="
+                  background: repeating-linear-gradient(
+                    45deg,
+                    #7a5a22,
+                    #7a5a22 2px,
+                    #3a2c12 2px,
+                    #3a2c12 4px
+                  );
+                "
+              ></i
+              >Traffic (slow, weight 5)</span
+            >
+            <span><i style="background: #38bdf833"></i>Scanned cell</span>
+            <span><i style="background: var(--amber)"></i>Final route</span>
+          </div>
+
+          <div class="board">
+            <div class="board-head">
+              <div class="board-title">◉ Departures — Live Stats</div>
+              <div class="status-pill status-idle" id="statusPill">STANDBY</div>
+            </div>
+            <div class="board-grid">
+              <div class="stat">
+                <div class="stat-label">Elapsed Time</div>
+                <div class="stat-value" id="statTime">0<small>ms</small></div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Nodes Scanned</div>
+                <div class="stat-value" id="statNodes">0</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Route Length</div>
+                <div class="stat-value" id="statLen">—<small>hops</small></div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Route Cost</div>
+                <div class="stat-value" id="statCost">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" id="comparePanel" style="display: none">
+            <div class="panel-title">Line Comparison</div>
+            <table class="compare-table" id="compareTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        Click "Wall" or "Traffic" then drag on the grid to build your network ·
+        pick a line · hit Run
+      </footer>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
